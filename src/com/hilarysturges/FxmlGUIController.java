@@ -70,8 +70,7 @@ public class FxmlGUIController implements Initializable {
     @FXML public Button searchPartsButton;
     @FXML public TextField searchBarProducts;
     @FXML public Button searchProductsButton;
-    int searchPartsButtonPressed;
-    int searchProductsButtonPressed;
+
     
     public void exitSession(ActionEvent event)  throws IOException {
         Stage stage = (Stage) exitButton.getScene().getWindow();
@@ -175,53 +174,17 @@ public class FxmlGUIController implements Initializable {
     }
     
     public void searchPartsButtonPushed() {
-        FilteredList<Part> filteredParts = new FilteredList<>(getParts(), p -> true);
-        //add in search button requirement
-        searchBarParts.textProperty().addListener((observable, oldValue, newValue)-> {
-            filteredParts.setPredicate(part -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                if (part.getName().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                }
-                return false;
-            });
-        });
         
-        
-        SortedList<Part> sortedParts = new SortedList<>(filteredParts);
-        sortedParts.comparatorProperty().bind(tableViewPart.comparatorProperty());
-        tableViewPart.setItems(sortedParts);
         
     }
     
     public void searchProductsButtonPushed() {
-        FilteredList<Product> filteredProducts = new FilteredList<>(getProducts(), p -> true);
-        //add in search button requirement
-        searchBarProducts.textProperty().addListener((observable, oldValue, newValue)-> {
-            filteredProducts.setPredicate(product -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCaseFilter = newValue.toLowerCase();
-                if (product.getName().toLowerCase().contains(lowerCaseFilter)) {
-                    return true;
-                }
-                return false;
-            });
-        });
         
-        SortedList<Product> sortedProducts = new SortedList<>(filteredProducts);
-        sortedProducts.comparatorProperty().bind(tableViewProduct.comparatorProperty());
-        tableViewProduct.setItems(sortedProducts);
     }
      
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        searchPartsButton.setOnAction(e->searchPartsButtonPressed=1);
         //parts
         idPartColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         namePartColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
@@ -309,7 +272,43 @@ public class FxmlGUIController implements Initializable {
         this.modifyProductButton.setDisable(true);
         this.deleteProductButton.setDisable(true);
         
+        //parts search feature
+        FilteredList<Part> filteredParts = new FilteredList<>(getParts(), p -> true);
+        searchBarParts.textProperty().addListener((observable, oldValue, newValue)-> {
+            filteredParts.setPredicate(part -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                if (part.getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                return false;
+            });
+        });
         
+        //products search feature
+        SortedList<Part> sortedParts = new SortedList<>(filteredParts);
+        sortedParts.comparatorProperty().bind(tableViewPart.comparatorProperty());
+        tableViewPart.setItems(sortedParts);
+        
+        FilteredList<Product> filteredProducts = new FilteredList<>(getProducts(), p -> true);
+        searchBarProducts.textProperty().addListener((observable, oldValue, newValue)-> {
+            filteredProducts.setPredicate(product -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                if (product.getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                return false;
+            });
+        });
+        
+        SortedList<Product> sortedProducts = new SortedList<>(filteredProducts);
+        sortedProducts.comparatorProperty().bind(tableViewProduct.comparatorProperty());
+        tableViewProduct.setItems(sortedProducts);
     }    
     
 }
