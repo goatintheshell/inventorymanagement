@@ -9,13 +9,22 @@ package com.hilarysturges;
  *
  * @author Hilary
  */
-public class Part {
+public abstract class Part {
     private int id;
     private String name;
     private double price;
     private int stock;
     private int min;
     private int max;
+    
+    @Override
+    public boolean equals (Object o) {
+        if (!(o instanceof Part))
+            return false;
+        else {
+        Part other = (Part) o;
+        return this == other;
+    } }
     
     public Part(int id, String name, double price, int stock, int min, int max) {
         this.id = id;

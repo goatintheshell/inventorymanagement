@@ -6,7 +6,6 @@
 package com.hilarysturges;
 
 import java.io.IOException;
-import static java.lang.constant.ConstantDescs.NULL;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.text.DecimalFormat;
@@ -26,7 +25,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -34,6 +36,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -85,14 +88,34 @@ public class FxmlGUIController implements Initializable {
         tableViewProduct.getItems().add(product);
     }
     
+    public void deletePart(Part part) {
+        ObservableList<Part> selectedRows, allParts;
+        allParts = tableViewPart.getItems();
+        selectedRows = tableViewPart.getSelectionModel().getSelectedItems();
+        for (Part part1 : selectedRows) {
+            allParts.remove(part);
+        }
+    }
+    
     public void deletePartButtonPushed() {
         ObservableList<Part> selectedRows, allParts;
         allParts = tableViewPart.getItems();
         selectedRows = tableViewPart.getSelectionModel().getSelectedItems();
-        
-        for (Part part : selectedRows) {
-            allParts.remove(part);
-        }
+        //alert window    
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.initModality(Modality.NONE);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Delete data");
+            alert.setContentText("Are you sure you want to proceed?");
+            //add if statement
+            
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    for (Part part : selectedRows) {
+                    allParts.remove(part);
+                    }
+                }
+            });
     }
     
     
@@ -100,17 +123,28 @@ public class FxmlGUIController implements Initializable {
         ObservableList<Product> selectedRows, allProducts;
         allProducts = tableViewProduct.getItems();
         selectedRows = tableViewProduct.getSelectionModel().getSelectedItems();
-        
-        for (Product product : selectedRows) {
-            allProducts.remove(product);
-        }
+        //alert window    
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.initModality(Modality.NONE);
+            alert.setTitle("Delete Confirmation");
+            alert.setHeaderText("Delete data");
+            alert.setContentText("Are you sure you want to proceed?");
+            //add if statement
+            
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    for (Product product : selectedRows) {
+                    allProducts.remove(product);
+                    }
+                }
+            });
     }
     
-    public ObservableList<Part> getParts() {
+    public static ObservableList<Part> getParts() {
         ObservableList<Part> parts = FXCollections.observableArrayList();
-        parts.add(new Part(1,"Part 1",5.00,5,1,10));
-        parts.add(new Part(2,"Part 2",10.00,10,5,20));
-        parts.add(new Part(3,"Part 3",15.00,12,5,20));
+        parts.add(new Outsourced(1,"Part 1",5.00,5,1,10,"Company ABC"));
+        parts.add(new InHouse(2,"Part 2",10.00,10,5,20,123));
+        parts.add(new Outsourced(3,"Part 3",15.00,12,5,20,"Company DEF"));
         return parts;
     }
     
@@ -158,7 +192,6 @@ public class FxmlGUIController implements Initializable {
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
         window.show();
-        deletePartButtonPushed();
     }
     
     public void modifyProductButtonPushed(ActionEvent event) throws IOException {
@@ -191,7 +224,6 @@ public class FxmlGUIController implements Initializable {
         SortedList<Part> sortedParts = new SortedList<>(filteredParts);
         sortedParts.comparatorProperty().bind(tableViewPart.comparatorProperty());
         tableViewPart.setItems(sortedParts);
-        
     }
     
     public void searchProductsButtonPushed() {
@@ -254,7 +286,7 @@ public class FxmlGUIController implements Initializable {
         
         tableViewPart.setItems(getParts());
         //tableViewPart.getItems().add(AddPartController.createList());
-        tableViewPart.setEditable(true);
+        //tableViewPart.setEditable(true);
         //idPartColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         namePartColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         tableViewPart.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -297,7 +329,7 @@ public class FxmlGUIController implements Initializable {
         });
             
         tableViewProduct.setItems(getProducts());
-        tableViewProduct.setEditable(true);
+        //tableViewProduct.setEditable(true);
         //idProductColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         nameProductColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         tableViewProduct.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);

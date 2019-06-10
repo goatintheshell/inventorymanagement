@@ -53,7 +53,7 @@
                   <Label text="Inv" GridPane.rowIndex="5" />
                   <Label text="Price" GridPane.rowIndex="6" />
                   <Label text="Max" GridPane.rowIndex="7" />
-                  <TextField fx:id="idProductTF" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
+                  <TextField fx:id="idProductTF" disable="true" editable="false" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" />
                   <TextField fx:id="nameTF" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4" />
                   <TextField fx:id="inventoryTF" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5" />
                   <TextField fx:id="priceTF" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6" />
@@ -64,26 +64,26 @@
                         <Insets left="30.0" />
                      </GridPane.margin>
                   </Label>
-                  <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="2" GridPane.rowSpan="2">
+                  <TableView fx:id="partTable1" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="2" GridPane.rowSpan="2">
                      <columns>
-                        <TableColumn prefWidth="85.0" text="Part ID" />
-                        <TableColumn text="Part Name" />
-                        <TableColumn prefWidth="98.0" text="Inventory Level" />
-                        <TableColumn prefWidth="105.0" text="Price per Unit" />
+                        <TableColumn fx:id="id1Column" prefWidth="85.0" text="Part ID" />
+                        <TableColumn fx:id="name1Column" text="Part Name" />
+                        <TableColumn fx:id="inventory1Column" prefWidth="98.0" text="Inventory Level" />
+                        <TableColumn fx:id="price1Column" prefWidth="105.0" text="Price per Unit" />
                      </columns>
                   </TableView>
-                  <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="5" GridPane.rowSpan="2">
+                  <TableView fx:id="partTable2" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="4" GridPane.rowIndex="5" GridPane.rowSpan="2">
                      <columns>
-                        <TableColumn prefWidth="85.0" text="Part ID" />
-                        <TableColumn prefWidth="87.0" text="Part Name" />
-                        <TableColumn prefWidth="102.0" text="Inventory Level" />
-                        <TableColumn prefWidth="94.0" text="Price per Unit" />
+                        <TableColumn fx:id="id2Column" prefWidth="85.0" text="Part ID" />
+                        <TableColumn fx:id="name2Column" prefWidth="87.0" text="Part Name" />
+                        <TableColumn fx:id="inventory2Column" prefWidth="102.0" text="Inventory Level" />
+                        <TableColumn fx:id="price2Column" prefWidth="94.0" text="Price per Unit" />
                      </columns>
                   </TableView>
-                  <Button mnemonicParsing="false" prefWidth="75.0" text="Delete" GridPane.columnIndex="7" GridPane.rowIndex="8" />
+                  <Button mnemonicParsing="false" onAction="#deletePartButtonPushed" prefWidth="75.0" text="Delete" GridPane.columnIndex="7" GridPane.rowIndex="8" />
                   <Button fx:id="saveButton" mnemonicParsing="false" onAction="#saveButtonPushed" prefWidth="75.0" text="Save" GridPane.columnIndex="6" GridPane.rowIndex="9" />
                   <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonPushed" prefWidth="75.0" text="Cancel" GridPane.columnIndex="7" GridPane.rowIndex="9" />
-                  <Button mnemonicParsing="false" prefWidth="75.0" text="Add" GridPane.columnIndex="7" GridPane.rowIndex="4" />
+                  <Button mnemonicParsing="false" onAction="#addButtonPushed" prefWidth="75.0" text="Add" GridPane.columnIndex="7" GridPane.rowIndex="4" />
                </children>
                <padding>
                   <Insets bottom="10.0" left="10.0" right="10.0" />
