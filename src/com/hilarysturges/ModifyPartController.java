@@ -107,8 +107,6 @@ public class ModifyPartController implements Initializable {
         inventoryTF.setText(Integer.toString(selectedPart.getStock()));
         minTF.setText(Integer.toString(selectedPart.getMin()));
         maxTF.setText(Integer.toString(selectedPart.getMax()));
-        if (this.radioButtonToggle.getSelectedToggle().equals(this.inHouseButton)) {
-            machineAndCompTF.setText(Integer.toString(selectedPartInHouse.getMachineId())); }
     }
 
     public void cancelButtonPushed(ActionEvent event) throws IOException {
