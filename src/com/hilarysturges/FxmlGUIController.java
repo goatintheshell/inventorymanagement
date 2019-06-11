@@ -202,8 +202,8 @@ public class FxmlGUIController implements Initializable {
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
         window.show();
-        controller.deletedAndModified(tableViewPart.getSelectionModel().getSelectedItem());
-        partslist.remove(tableViewPart.getSelectionModel().getSelectedItem());
+        //controller.deletedAndModified(tableViewPart.getSelectionModel().getSelectedItem());
+        //partslist.remove(tableViewPart.getSelectionModel().getSelectedItem());
     }
     
     public void modifyProductButtonPushed(ActionEvent event) throws IOException {
@@ -216,7 +216,7 @@ public class FxmlGUIController implements Initializable {
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
         window.show();
-        controller.deletedAndModified(tableViewProduct.getSelectionModel().getSelectedItem());
+        //controller.deletedAndModified(tableViewProduct.getSelectionModel().getSelectedItem());
         //productslist.remove(tableViewProduct.getSelectionModel().getSelectedItem());
     }
     

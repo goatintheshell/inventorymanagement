@@ -151,12 +151,12 @@ public class AddProductController implements Initializable {
             alert.setHeaderText("Minimum is greater than maximum");
             alert.setContentText("Data will not be added");
             alert.showAndWait();
-        } else
+        } else {
         controller.addProducts(product);
         
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
-        window.show();
+        window.show(); }
         
     }
 

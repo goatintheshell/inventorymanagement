@@ -165,11 +165,11 @@ public class ModifyProductController implements Initializable {
         selectedProduct.setStock(Integer.parseInt(inventoryTF.getText()));
         selectedProduct.setMax(Integer.parseInt(maxTF.getText()));
         selectedProduct.setMin(Integer.parseInt(minTF.getText()));
-        }
+        
 
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
-        window.show();
+        window.show(); }
         
     }
     

@@ -35,16 +35,16 @@ public class ModifyPartController implements Initializable {
 
     @FXML public Button cancelButton;
     
-    @FXML public RadioButton outsourcedButton;
-    @FXML public RadioButton inHouseButton;
-    @FXML public ToggleGroup radioButtonToggle;
+//    @FXML public RadioButton outsourcedButton;
+//    @FXML public RadioButton inHouseButton;
+//    @FXML public ToggleGroup radioButtonToggle;
     
     @FXML public Label machineAndCompLabel;
     @FXML public TextField machineAndCompTF;
     
     private Part selectedPart;
-    private Outsourced selectedPartOutsourced;
-    private InHouse selectedPartInHouse;
+    private InHouse selectedInHouse;
+    private Outsourced selectedOutsourced;
     
     @FXML public TextField idPartTF;
     @FXML public TextField nameTF;
@@ -63,27 +63,7 @@ public class ModifyPartController implements Initializable {
         Parent tableViewParent = loader.load();
         Scene tableViewScene = new Scene(tableViewParent);
         FxmlGUIController controller = loader.getController();
-        if (this.radioButtonToggle.getSelectedToggle().equals(this.inHouseButton)) {
-            //create InHouse object
-            InHouse part = new InHouse(Integer.parseInt(idPartTF.getText()),
-                             nameTF.getText(),
-                             Double.parseDouble(priceTF.getText()),
-                             Integer.parseInt(inventoryTF.getText()),
-                             Integer.parseInt(maxTF.getText()),
-                             Integer.parseInt(minTF.getText()),
-                             Integer.parseInt(machineAndCompTF.getText()));
-            controller.addParts(part);
-        } else {
-            //create Outsourced object
-            Outsourced part = new Outsourced(Integer.parseInt(idPartTF.getText()),
-                             nameTF.getText(),
-                             Double.parseDouble(priceTF.getText()),
-                             Integer.parseInt(inventoryTF.getText()),
-                             Integer.parseInt(maxTF.getText()),
-                             Integer.parseInt(minTF.getText()),
-                             machineAndCompTF.getText());
-            controller.addParts(part);
-        }
+        
         
           if (Integer.parseInt(minTF.getText()) > Integer.parseInt(maxTF.getText())) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -93,6 +73,39 @@ public class ModifyPartController implements Initializable {
             alert.setContentText("Data will not be added");
             alert.showAndWait();
         } else {
+              if (selectedInHouse != null) {
+//            InHouse part = new InHouse(Integer.parseInt(idPartTF.getText()),
+//                             nameTF.getText(),
+//                             Double.parseDouble(priceTF.getText()),
+//                             Integer.parseInt(inventoryTF.getText()),
+//                             Integer.parseInt(maxTF.getText()),
+//                             Integer.parseInt(minTF.getText()),
+//                             Integer.parseInt(machineAndCompTF.getText()));
+//            controller.addParts(part);
+            selectedInHouse.setId(Integer.parseInt(idPartTF.getText()));
+            selectedInHouse.setName(nameTF.getText()); 
+            selectedInHouse.setPrice(Double.parseDouble(priceTF.getText()));
+            selectedInHouse.setStock(Integer.parseInt(inventoryTF.getText()));
+            selectedInHouse.setMax(Integer.parseInt(maxTF.getText()));
+            selectedInHouse.setMin(Integer.parseInt(minTF.getText()));
+            selectedInHouse.setMachineId(Integer.parseInt(machineAndCompTF.getText()));
+        } else {
+//            Outsourced part = new Outsourced(Integer.parseInt(idPartTF.getText()),
+//                             nameTF.getText(),
+//                             Double.parseDouble(priceTF.getText()),
+//                             Integer.parseInt(inventoryTF.getText()),
+//                             Integer.parseInt(maxTF.getText()),
+//                             Integer.parseInt(minTF.getText()),
+//                             machineAndCompTF.getText());
+//            controller.addParts(part);
+            selectedOutsourced.setId(Integer.parseInt(idPartTF.getText()));
+            selectedOutsourced.setName(nameTF.getText()); 
+            selectedOutsourced.setPrice(Double.parseDouble(priceTF.getText()));
+            selectedOutsourced.setStock(Integer.parseInt(inventoryTF.getText()));
+            selectedOutsourced.setMax(Integer.parseInt(maxTF.getText()));
+            selectedOutsourced.setMin(Integer.parseInt(minTF.getText()));
+            selectedOutsourced.setCompanyName(machineAndCompTF.getText());
+        }
         
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
@@ -109,6 +122,19 @@ public class ModifyPartController implements Initializable {
         inventoryTF.setText(Integer.toString(selectedPart.getStock()));
         minTF.setText(Integer.toString(selectedPart.getMin()));
         maxTF.setText(Integer.toString(selectedPart.getMax()));
+        
+        if (part instanceof InHouse){
+        selectedInHouse = (InHouse)part;
+        machineAndCompTF.setVisible(true);
+        machineAndCompLabel.setText("Machine ID");
+        machineAndCompTF.setText(Integer.toString(selectedInHouse.getMachineId()));
+        }
+        else if (part instanceof Outsourced) {
+            selectedOutsourced = (Outsourced)part;
+            machineAndCompTF.setVisible(true);
+            machineAndCompLabel.setText("Company Name");
+            machineAndCompTF.setText(selectedOutsourced.getCompanyName());
+        }
     }
 
     public void cancelButtonPushed(ActionEvent event) throws IOException {
@@ -124,7 +150,6 @@ public class ModifyPartController implements Initializable {
             alert.setTitle("Delete Confirmation");
             alert.setHeaderText("Cancel");
             alert.setContentText("Are you sure you want to proceed?");
-            //add if statement
             
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
@@ -134,32 +159,34 @@ public class ModifyPartController implements Initializable {
                     window.show();
                 }
             });
-            controller.addParts(deletedPart[0]);
+            //controller.addParts(deletedPart[0]);
     }
     
     public void deletedAndModified(Part part) {
         deletedPart[0] = part;
     }
     
-    public void radioButtonSelected() {
-        if (this.radioButtonToggle.getSelectedToggle().equals(this.inHouseButton)) {
-            //make machine ID visible
-            machineAndCompTF.setVisible(true);
-            machineAndCompLabel.setText("Machine ID");
-            machineAndCompTF.setText(Integer.toString(selectedPartInHouse.getMachineId())); }
-        if (this.radioButtonToggle.getSelectedToggle().equals(this.outsourcedButton)) {
-            //make company name visible
-            machineAndCompTF.setVisible(true);
-            machineAndCompLabel.setText("Company Name");
-            machineAndCompTF.setText(selectedPartOutsourced.getCompanyName()); }
-    }
+//    public void radioButtonSelected() {
+//        if (this.radioButtonToggle.getSelectedToggle().equals(this.inHouseButton)) {
+//            //make machine ID visible
+//            machineAndCompTF.setVisible(true);
+//            machineAndCompLabel.setText("Machine ID");
+//            machineAndCompTF.setText(Integer.toString(selectedInHouse.getMachineId())); 
+//        }
+//        if (this.radioButtonToggle.getSelectedToggle().equals(this.outsourcedButton)) {
+//            //make company name visible
+//            machineAndCompTF.setVisible(true);
+//            machineAndCompLabel.setText("Company Name");
+//            machineAndCompTF.setText(selectedOutsourced.getCompanyName()); 
+//        }
+//    }
 
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        radioButtonToggle = new ToggleGroup();
-        this.inHouseButton.setToggleGroup(radioButtonToggle);
-        this.outsourcedButton.setToggleGroup(radioButtonToggle);
+//        radioButtonToggle = new ToggleGroup();
+//        this.inHouseButton.setToggleGroup(radioButtonToggle);
+//        this.outsourcedButton.setToggleGroup(radioButtonToggle);
     }    
     
 }

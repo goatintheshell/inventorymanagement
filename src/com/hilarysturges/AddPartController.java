@@ -67,8 +67,17 @@ public class AddPartController implements Initializable {
         Parent tableViewParent = loader.load();
         Scene tableViewScene = new Scene(tableViewParent);
         FxmlGUIController controller = loader.getController();
-        //if statement here
-        if (this.radioButtonToggle.getSelectedToggle().equals(this.inHouseButton)) {
+        counter++;
+        //add error handling logic here
+        if (Integer.parseInt(minTF.getText()) > Integer.parseInt(maxTF.getText())) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.initModality(Modality.NONE);
+            alert.setTitle("Minimum > Maximum");
+            alert.setHeaderText("Minimum is greater than maximum");
+            alert.setContentText("Data will not be added");
+            alert.showAndWait();
+        } else {
+            if (this.radioButtonToggle.getSelectedToggle().equals(this.inHouseButton)) {
             //create InHouse object
             InHouse part = new InHouse(counter,
                              nameTF.getText(),
@@ -89,17 +98,6 @@ public class AddPartController implements Initializable {
                              machineAndCompTF.getText());
             controller.addParts(part);
         }
-        
-        counter++;
-        //add error handling logic here
-        if (Integer.parseInt(minTF.getText()) > Integer.parseInt(maxTF.getText())) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.initModality(Modality.NONE);
-            alert.setTitle("Minimum > Maximum");
-            alert.setHeaderText("Minimum is greater than maximum");
-            alert.setContentText("Data will not be added");
-            alert.showAndWait();
-        } else {
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
         window.show();
