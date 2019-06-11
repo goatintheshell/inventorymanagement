@@ -55,8 +55,8 @@ public class ModifyProductController implements Initializable {
     @FXML public TextField nameTF;
     @FXML public TextField priceTF;
     @FXML public TextField inventoryTF;
-    @FXML public TextField minTF;
     @FXML public TextField maxTF;
+    @FXML public TextField minTF;
     
     @FXML public Button saveButton;
     
@@ -75,10 +75,12 @@ public class ModifyProductController implements Initializable {
     @FXML public TableColumn<Part, Integer> inventory2Column;
     @FXML public TableColumn price2Column;
     
-    static Product[] deletedProduct = new Product[1];
+    //static Product[] deletedProduct = new Product[1];
     
     static public ObservableList<Part> parts1=FXCollections.observableArrayList();
     static public ObservableList<Part> parts2=FXCollections.observableArrayList();
+    
+    static public ObservableList<Part> deletedParts=FXCollections.observableArrayList();
     
     public void searchPartsButtonPushed() {
         FilteredList<Part> filteredParts = new FilteredList<>(FxmlGUIController.partslist, p -> true);
@@ -100,9 +102,9 @@ public class ModifyProductController implements Initializable {
     }
     
     public void deletePartButtonPushed() {
-        ObservableList<Part> selectedRows, allParts;
-        allParts = partTable2.getItems();
-        selectedRows = partTable2.getSelectionModel().getSelectedItems();
+//        ObservableList<Part> selectedRows, allParts;
+//        allParts = partTable2.getItems();
+//        selectedRows = partTable2.getSelectionModel().getSelectedItems();
         //alert window    
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.initModality(Modality.NONE);
@@ -113,15 +115,20 @@ public class ModifyProductController implements Initializable {
             
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
-                    for (Part part : selectedRows) {
-                    allParts.remove(part);
-                    }
+//                    for (Part part : selectedRows) {
+//                        
+//                    allParts.remove(part);
+//                    }
+                    parts2.remove(partTable2.getSelectionModel().getSelectedItem());
+                    deletedParts.add(partTable2.getSelectionModel().getSelectedItem());
+//                    partTable2.setItems(selectedProduct.getAllAssociatedParts());
+                    System.out.println("deleted");
                 }
             });
     }
     
     public void addButtonPushed(ActionEvent event) { 
-        addData(partTable1.getSelectionModel().getSelectedItem());   
+        addData(partTable1.getSelectionModel().getSelectedItem());
     }
     
     public void addData(Part part) {
@@ -129,11 +136,16 @@ public class ModifyProductController implements Initializable {
         int row = pos.getRow();
         parts2 = partTable2.getItems();
         parts2.add((partTable1.getItems().get(row)));
+        //selectedProduct.addAssociatedPart(part);
     }
     
     public void saveButtonPushed(ActionEvent event) throws IOException {
         for (int i=0 ; i < partTable2.getItems().size() ; i++){
-            selectedProduct.addAssociatedPart(partTable2.getItems().get(i)); 
+            selectedProduct.addAssociatedPart(partTable2.getItems().get(i));
+            //System.out.print("saved");
+        }
+        for (int i=0 ; i < deletedParts.size() ; i++) {
+            selectedProduct.deleteAssociatedPart(deletedParts.get(i));
         }
         System.out.println(selectedProduct.getAllAssociatedParts());
         FXMLLoader loader = new FXMLLoader();
@@ -141,15 +153,6 @@ public class ModifyProductController implements Initializable {
         Parent tableViewParent = loader.load();
         Scene tableViewScene = new Scene(tableViewParent);
         FxmlGUIController controller = loader.getController();
-        //save state instead of creating new object
-        
-//        Product product = new Product(Integer.parseInt(idProductTF.getText()),
-//                             nameTF.getText(),
-//                             Double.parseDouble(priceTF.getText()),
-//                             Integer.parseInt(inventoryTF.getText()),
-//                             Integer.parseInt(maxTF.getText()),
-//                             Integer.parseInt(minTF.getText()));
-        
         if (Integer.parseInt(minTF.getText()) > Integer.parseInt(maxTF.getText())) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.initModality(Modality.NONE);
@@ -158,7 +161,6 @@ public class ModifyProductController implements Initializable {
             alert.setContentText("Data will not be added");
             alert.showAndWait();
         } else {
-        //controller.addProducts(product);
         selectedProduct.setId(Integer.parseInt(idProductTF.getText()));
         selectedProduct.setName(nameTF.getText()); 
         selectedProduct.setPrice(Double.parseDouble(priceTF.getText()));
@@ -180,11 +182,12 @@ public class ModifyProductController implements Initializable {
         nameTF.setText(selectedProduct.getName());
         priceTF.setText(Double.toString(selectedProduct.getPrice()));
         inventoryTF.setText(Integer.toString(selectedProduct.getStock()));
-        minTF.setText(Integer.toString(selectedProduct.getMin()));
         maxTF.setText(Integer.toString(selectedProduct.getMax()));
-        System.out.println(selectedProduct.getAllAssociatedParts());
+        minTF.setText(Integer.toString(selectedProduct.getMin()));
+        //System.out.println(selectedProduct.getAllAssociatedParts());
         if (!selectedProduct.getAllAssociatedParts().isEmpty()) {
             partTable2.setItems(selectedProduct.getAllAssociatedParts());
+            parts2 = partTable2.getItems();
             System.out.println(selectedProduct.getAllAssociatedParts());
         };
     }
@@ -215,9 +218,9 @@ public class ModifyProductController implements Initializable {
             //controller.addProducts(deletedProduct[0]);
     }
     
-    public void deletedAndModified(Product product) {
-        deletedProduct[0] = product;
-    }
+//    public void deletedAndModified(Product product) {
+//        deletedProduct[0] = product;
+//    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -257,7 +260,7 @@ public class ModifyProductController implements Initializable {
         });
         
         partTable1.setItems(FxmlGUIController.partslist);
-        //partTable2.setItems(parts2);
+        //partTable2.setItems();
         name1Column.setCellFactory(TextFieldTableCell.forTableColumn());
         partTable1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         

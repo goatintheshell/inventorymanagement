@@ -103,6 +103,11 @@ public class FxmlGUIController implements Initializable {
         for (Part part1 : selectedRows) {
             allParts.remove(part);
         }
+        
+    }
+    
+    public void deleteChangedPart (Part part) {
+        partslist.remove(part);
     }
     
     public void deletePartButtonPushed() {
@@ -120,8 +125,10 @@ public class FxmlGUIController implements Initializable {
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
                     for (Part part : selectedRows) {
+                        System.out.println(selectedRows);
                     allParts.remove(part);
                     }
+                    
                 }
             });
     }
@@ -150,18 +157,18 @@ public class FxmlGUIController implements Initializable {
     
     public static ObservableList<Part> getParts() {
         if (counterParts == 0) {
-        partslist.add(new Outsourced(1,"Part 1",5.00,5,1,10,"Company ABC"));
-        partslist.add(new InHouse(2,"Part 2",10.00,10,5,20,123));
-        partslist.add(new Outsourced(3,"Part 3",15.00,12,5,20,"Company DEF"));
+        partslist.add(new Outsourced(1,"Part 1",5.00,5,10,1,"Company ABC"));
+        partslist.add(new InHouse(2,"Part 2",10.00,10,20,5,123));
+        partslist.add(new Outsourced(3,"Part 3",15.00,12,15,2,"Company DEF"));
         counterParts++; }
         return partslist;
     }
     
     public ObservableList<Product> getProducts() {
         if (counterProducts == 0) {
-        productslist.add(new Product(1,"Product 1",5.00,5,1,10));
-        productslist.add(new Product(2,"Product 2",10.00,10,5,20));
-        productslist.add(new Product(3,"Product 3",15.00,12,5,20));
+        productslist.add(new Product(1,"Product 1",5.00,5,10,1));
+        productslist.add(new Product(2,"Product 2",10.00,10,20,5));
+        productslist.add(new Product(3,"Product 3",15.00,12,15,2));
         counterProducts++; }
         return productslist;
     }
