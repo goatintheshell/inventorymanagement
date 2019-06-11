@@ -57,6 +57,8 @@ public class AddProductController implements Initializable {
     @FXML public TextField maxTF;
     @FXML public Button saveButton;
     
+    private Product selectedProduct;
+    
     @FXML public TextField searchBarParts;
     
     @FXML public TableView<Part> partTable1;
@@ -155,6 +157,7 @@ public class AddProductController implements Initializable {
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
         window.show();
+        
     }
 
     public void cancelButtonPushed(ActionEvent event) throws IOException {

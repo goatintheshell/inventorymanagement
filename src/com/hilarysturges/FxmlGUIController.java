@@ -217,7 +217,7 @@ public class FxmlGUIController implements Initializable {
         window.setScene(tableViewScene);
         window.show();
         controller.deletedAndModified(tableViewProduct.getSelectionModel().getSelectedItem());
-        productslist.remove(tableViewProduct.getSelectionModel().getSelectedItem());
+        //productslist.remove(tableViewProduct.getSelectionModel().getSelectedItem());
     }
     
     public void searchPartsButtonPushed() {

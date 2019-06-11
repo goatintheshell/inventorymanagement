@@ -132,17 +132,23 @@ public class ModifyProductController implements Initializable {
     }
     
     public void saveButtonPushed(ActionEvent event) throws IOException {
+        for (int i=0 ; i < partTable2.getItems().size() ; i++){
+            selectedProduct.addAssociatedPart(partTable2.getItems().get(i)); 
+        }
+        System.out.println(selectedProduct.getAllAssociatedParts());
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("fxmlGUI.fxml"));
         Parent tableViewParent = loader.load();
         Scene tableViewScene = new Scene(tableViewParent);
         FxmlGUIController controller = loader.getController();
-        Product product = new Product(Integer.parseInt(idProductTF.getText()),
-                             nameTF.getText(),
-                             Double.parseDouble(priceTF.getText()),
-                             Integer.parseInt(inventoryTF.getText()),
-                             Integer.parseInt(maxTF.getText()),
-                             Integer.parseInt(minTF.getText()));
+        //save state instead of creating new object
+        
+//        Product product = new Product(Integer.parseInt(idProductTF.getText()),
+//                             nameTF.getText(),
+//                             Double.parseDouble(priceTF.getText()),
+//                             Integer.parseInt(inventoryTF.getText()),
+//                             Integer.parseInt(maxTF.getText()),
+//                             Integer.parseInt(minTF.getText()));
         
         if (Integer.parseInt(minTF.getText()) > Integer.parseInt(maxTF.getText())) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
@@ -151,12 +157,20 @@ public class ModifyProductController implements Initializable {
             alert.setHeaderText("Minimum is greater than maximum");
             alert.setContentText("Data will not be added");
             alert.showAndWait();
-        } else
-        controller.addProducts(product);
+        } else {
+        //controller.addProducts(product);
+        selectedProduct.setId(Integer.parseInt(idProductTF.getText()));
+        selectedProduct.setName(nameTF.getText()); 
+        selectedProduct.setPrice(Double.parseDouble(priceTF.getText()));
+        selectedProduct.setStock(Integer.parseInt(inventoryTF.getText()));
+        selectedProduct.setMax(Integer.parseInt(maxTF.getText()));
+        selectedProduct.setMin(Integer.parseInt(minTF.getText()));
+        }
 
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
         window.show();
+        
     }
     
     
@@ -168,6 +182,11 @@ public class ModifyProductController implements Initializable {
         inventoryTF.setText(Integer.toString(selectedProduct.getStock()));
         minTF.setText(Integer.toString(selectedProduct.getMin()));
         maxTF.setText(Integer.toString(selectedProduct.getMax()));
+        System.out.println(selectedProduct.getAllAssociatedParts());
+        if (!selectedProduct.getAllAssociatedParts().isEmpty()) {
+            partTable2.setItems(selectedProduct.getAllAssociatedParts());
+            System.out.println(selectedProduct.getAllAssociatedParts());
+        };
     }
 
     public void cancelButtonPushed(ActionEvent event) throws IOException {
@@ -193,7 +212,7 @@ public class ModifyProductController implements Initializable {
                     window.show();
                 }
             });
-            controller.addProducts(deletedProduct[0]);
+            //controller.addProducts(deletedProduct[0]);
     }
     
     public void deletedAndModified(Product product) {
@@ -238,7 +257,7 @@ public class ModifyProductController implements Initializable {
         });
         
         partTable1.setItems(FxmlGUIController.partslist);
-        partTable2.setItems(parts2);
+        //partTable2.setItems(parts2);
         name1Column.setCellFactory(TextFieldTableCell.forTableColumn());
         partTable1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         
