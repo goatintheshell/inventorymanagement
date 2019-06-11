@@ -59,7 +59,7 @@ public class AddPartController implements Initializable {
     
     @FXML public Button saveButton;
     
-    int counter = 4;
+    static int counter = 4;
     
     public void saveButtonPushed(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();
@@ -77,7 +77,7 @@ public class AddPartController implements Initializable {
                              Integer.parseInt(maxTF.getText()),
                              Integer.parseInt(minTF.getText()),
                              Integer.parseInt(machineAndCompTF.getText()));
-            controller.addParts(part);
+            controller.addParts(part); 
         } else {
             //create Outsourced object
             Outsourced part = new Outsourced(counter,
@@ -106,7 +106,7 @@ public class AddPartController implements Initializable {
         }
     }
     
-    public void initData(Part part) {
+    public void initData(InHouse part) {
         selectedPart = part;
         idLabel.setText(Integer.toString(selectedPart.getId()));
         nameLabel.setText(selectedPart.getName());

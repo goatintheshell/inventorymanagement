@@ -46,8 +46,8 @@
                         <Font name="System Bold" size="14.0" />
                      </font>
                   </Label>
-                  <Button maxWidth="75.0" mnemonicParsing="false" prefWidth="75.0" text="Search" GridPane.columnIndex="4" GridPane.rowIndex="1" />
-                  <TextField GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                  <Button maxWidth="75.0" mnemonicParsing="false" onAction="#searchPartsButtonPushed" prefWidth="75.0" text="Search" GridPane.columnIndex="4" GridPane.rowIndex="1" />
+                  <TextField fx:id="searchBarParts" GridPane.columnIndex="5" GridPane.columnSpan="2" GridPane.rowIndex="1" />
                   <Label text="ID" GridPane.rowIndex="3" />
                   <Label text="Name" GridPane.rowIndex="4" />
                   <Label text="Inv" GridPane.rowIndex="5" />

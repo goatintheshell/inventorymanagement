@@ -73,6 +73,12 @@ public class FxmlGUIController implements Initializable {
     @FXML public Button searchPartsButton;
     @FXML public TextField searchBarProducts;
     @FXML public Button searchProductsButton;
+    
+    static int counterParts;
+    static int counterProducts;
+    
+    static ObservableList<Part> partslist = FXCollections.observableArrayList();
+    static ObservableList<Product> productslist = FXCollections.observableArrayList();
 
     
     public void exitSession(ActionEvent event)  throws IOException {
@@ -80,12 +86,14 @@ public class FxmlGUIController implements Initializable {
         stage.close();
     }
     
-    public void addParts(Part part) {
-        tableViewPart.getItems().add(part);
+    public static void addParts(Part part) {
+        partslist.add(part);
+        //tableViewPart.getItems().add(part);
     }
     
     public void addProducts(Product product) {
-        tableViewProduct.getItems().add(product);
+        productslist.add(product);
+        //tableViewProduct.getItems().add(product);
     }
     
     public void deletePart(Part part) {
@@ -141,19 +149,21 @@ public class FxmlGUIController implements Initializable {
     }
     
     public static ObservableList<Part> getParts() {
-        ObservableList<Part> parts = FXCollections.observableArrayList();
-        parts.add(new Outsourced(1,"Part 1",5.00,5,1,10,"Company ABC"));
-        parts.add(new InHouse(2,"Part 2",10.00,10,5,20,123));
-        parts.add(new Outsourced(3,"Part 3",15.00,12,5,20,"Company DEF"));
-        return parts;
+        if (counterParts == 0) {
+        partslist.add(new Outsourced(1,"Part 1",5.00,5,1,10,"Company ABC"));
+        partslist.add(new InHouse(2,"Part 2",10.00,10,5,20,123));
+        partslist.add(new Outsourced(3,"Part 3",15.00,12,5,20,"Company DEF"));
+        counterParts++; }
+        return partslist;
     }
     
     public ObservableList<Product> getProducts() {
-        ObservableList<Product> products = FXCollections.observableArrayList();
-        products.add(new Product(1,"Product 1",5.00,5,1,10));
-        products.add(new Product(2,"Product 2",10.00,10,5,20));
-        products.add(new Product(3,"Product 3",15.00,12,5,20));
-        return products;
+        if (counterProducts == 0) {
+        productslist.add(new Product(1,"Product 1",5.00,5,1,10));
+        productslist.add(new Product(2,"Product 2",10.00,10,5,20));
+        productslist.add(new Product(3,"Product 3",15.00,12,5,20));
+        counterProducts++; }
+        return productslist;
     }
     
     public void enableModifyAndDeletePart() {
@@ -192,6 +202,8 @@ public class FxmlGUIController implements Initializable {
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
         window.show();
+        controller.deletedAndModified(tableViewPart.getSelectionModel().getSelectedItem());
+        partslist.remove(tableViewPart.getSelectionModel().getSelectedItem());
     }
     
     public void modifyProductButtonPushed(ActionEvent event) throws IOException {
@@ -204,11 +216,13 @@ public class FxmlGUIController implements Initializable {
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
         window.show();
+        controller.deletedAndModified(tableViewProduct.getSelectionModel().getSelectedItem());
+        productslist.remove(tableViewProduct.getSelectionModel().getSelectedItem());
     }
     
     public void searchPartsButtonPushed() {
         //parts search feature
-        FilteredList<Part> filteredParts = new FilteredList<>(getParts(), p -> true);
+        FilteredList<Part> filteredParts = new FilteredList<>(partslist, p -> true);
         searchBarParts.textProperty().addListener((observable, oldValue, newValue)-> {
             filteredParts.setPredicate(part -> {
                 if (newValue == null || newValue.isEmpty()) {
@@ -253,7 +267,6 @@ public class FxmlGUIController implements Initializable {
         idPartColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getId()).asObject());
         namePartColumn.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
         inventoryPartColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getStock()).asObject());
-        
         pricePerUnitPartColumn.setCellValueFactory(new PropertyValueFactory<Part, Double>("price"));
             pricePerUnitPartColumn.setCellFactory(new Callback<TableColumn, TableCell>() {
             public TableCell call(TableColumn p) {
@@ -286,10 +299,9 @@ public class FxmlGUIController implements Initializable {
         
         tableViewPart.setItems(getParts());
         //tableViewPart.getItems().add(AddPartController.createList());
-        //tableViewPart.setEditable(true);
         //idPartColumn.setCellFactory(TextFieldTableCell.forTableColumn());
         namePartColumn.setCellFactory(TextFieldTableCell.forTableColumn());
-        tableViewPart.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        //tableViewPart.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         this.modifyPartButton.setDisable(true);
         this.deletePartButton.setDisable(true);
         
@@ -297,7 +309,6 @@ public class FxmlGUIController implements Initializable {
         idProductColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
         nameProductColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
         inventoryProductColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("stock"));
-        
         pricePerUnitProductColumn.setCellValueFactory(new PropertyValueFactory<Product, Double>("price"));
             pricePerUnitProductColumn.setCellFactory(new Callback<TableColumn, TableCell>() {
             public TableCell call(TableColumn p) {

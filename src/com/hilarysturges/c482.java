@@ -24,6 +24,7 @@ public class c482 extends Application {
         Scene scene = new Scene(root);
         
         stage.setScene(scene);
+        stage.setTitle("Inventory Management System");
         stage.show();
     }
     public static void main(String[] args) {

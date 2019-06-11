@@ -5,6 +5,7 @@
  */
 package com.hilarysturges;
 
+import static com.hilarysturges.FxmlGUIController.partslist;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -15,6 +16,8 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -54,6 +57,8 @@ public class AddProductController implements Initializable {
     @FXML public TextField maxTF;
     @FXML public Button saveButton;
     
+    @FXML public TextField searchBarParts;
+    
     @FXML public TableView<Part> partTable1;
     @FXML public TableView<Part> partTable2;
     
@@ -67,10 +72,29 @@ public class AddProductController implements Initializable {
     @FXML public TableColumn<Part, Integer> inventory2Column;
     @FXML public TableColumn price2Column;
     
-    @FXML public ObservableList<Part> parts1=FXCollections.observableArrayList();
-    @FXML public ObservableList<Part> parts2=FXCollections.observableArrayList();
+    static public ObservableList<Part> parts1=FXCollections.observableArrayList();
+    static public ObservableList<Part> parts2=FXCollections.observableArrayList();
     
-    int counter=4;
+    static int counter=4;
+    
+    public void searchPartsButtonPushed() {
+        FilteredList<Part> filteredParts = new FilteredList<>(FxmlGUIController.partslist, p -> true);
+        searchBarParts.textProperty().addListener((observable, oldValue, newValue)-> {
+            filteredParts.setPredicate(part -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                if (part.getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                return false;
+            });
+        });
+        SortedList<Part> sortedParts = new SortedList<>(filteredParts);
+        sortedParts.comparatorProperty().bind(partTable1.comparatorProperty());
+        partTable1.setItems(sortedParts);
+    }
     
     public void deletePartButtonPushed() {
         ObservableList<Part> selectedRows, allParts;
@@ -191,7 +215,7 @@ public class AddProductController implements Initializable {
             }
         });
         
-        partTable1.setItems(FxmlGUIController.getParts());
+        partTable1.setItems(FxmlGUIController.partslist);
         name1Column.setCellFactory(TextFieldTableCell.forTableColumn());
         partTable1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         

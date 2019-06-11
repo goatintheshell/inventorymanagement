@@ -55,6 +55,8 @@ public class ModifyPartController implements Initializable {
     
     @FXML public Button saveButton;
     
+    static Part[] deletedPart = new Part[1];
+    
     public void saveButtonPushed(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getResource("fxmlGUI.fxml"));
@@ -110,7 +112,12 @@ public class ModifyPartController implements Initializable {
     }
 
     public void cancelButtonPushed(ActionEvent event) throws IOException {
-        Parent tableViewParent = FXMLLoader.load(getClass().getResource("fxmlGUI.fxml"));        
+        //Parent tableViewParent = FXMLLoader.load(getClass().getResource("fxmlGUI.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("fxmlGUI.fxml"));
+        Parent tableViewParent = loader.load();
+        Scene tableViewScene = new Scene(tableViewParent);
+        FxmlGUIController controller = loader.getController();
         //alert window    
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.initModality(Modality.NONE);
@@ -121,12 +128,17 @@ public class ModifyPartController implements Initializable {
             
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
-                    Scene tableViewScene = new Scene(tableViewParent);
+                    //Scene tableViewScene = new Scene(tableViewParent);
                     Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
                     window.setScene(tableViewScene);
                     window.show();
                 }
             });
+            controller.addParts(deletedPart[0]);
+    }
+    
+    public void deletedAndModified(Part part) {
+        deletedPart[0] = part;
     }
     
     public void radioButtonSelected() {
