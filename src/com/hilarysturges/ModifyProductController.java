@@ -15,6 +15,8 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -57,6 +59,8 @@ public class ModifyProductController implements Initializable {
     
     @FXML public Button saveButton;
     
+    @FXML public TextField searchBarParts;
+    
     @FXML public TableView<Part> partTable1;
     @FXML public TableView<Part> partTable2;
     
@@ -70,8 +74,27 @@ public class ModifyProductController implements Initializable {
     @FXML public TableColumn<Part, Integer> inventory2Column;
     @FXML public TableColumn price2Column;
     
-    @FXML public ObservableList<Part> parts1=FXCollections.observableArrayList();
-    @FXML public ObservableList<Part> parts2=FXCollections.observableArrayList();
+    static public ObservableList<Part> parts1=FXCollections.observableArrayList();
+    static public ObservableList<Part> parts2=FXCollections.observableArrayList();
+    
+    public void searchPartsButtonPushed() {
+        FilteredList<Part> filteredParts = new FilteredList<>(FxmlGUIController.partslist, p -> true);
+        searchBarParts.textProperty().addListener((observable, oldValue, newValue)-> {
+            filteredParts.setPredicate(part -> {
+                if (newValue == null || newValue.isEmpty()) {
+                    return true;
+                }
+                String lowerCaseFilter = newValue.toLowerCase();
+                if (part.getName().toLowerCase().contains(lowerCaseFilter)) {
+                    return true;
+                }
+                return false;
+            });
+        });
+        SortedList<Part> sortedParts = new SortedList<>(filteredParts);
+        sortedParts.comparatorProperty().bind(partTable1.comparatorProperty());
+        partTable1.setItems(sortedParts);
+    }
     
     public void deletePartButtonPushed() {
         ObservableList<Part> selectedRows, allParts;
@@ -127,7 +150,7 @@ public class ModifyProductController implements Initializable {
             alert.showAndWait();
         } else
         controller.addProducts(product);
-        
+
         Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
         window.setScene(tableViewScene);
         window.show();
@@ -201,7 +224,8 @@ public class ModifyProductController implements Initializable {
             }
         });
         
-        partTable1.setItems(FxmlGUIController.getParts());
+        partTable1.setItems(FxmlGUIController.partslist);
+        partTable2.setItems(parts2);
         name1Column.setCellFactory(TextFieldTableCell.forTableColumn());
         partTable1.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         
