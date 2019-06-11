@@ -5,6 +5,7 @@
  */
 package com.hilarysturges;
 
+import static com.hilarysturges.ModifyPartController.deletedPart;
 import java.io.IOException;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -73,6 +74,8 @@ public class ModifyProductController implements Initializable {
     @FXML public TableColumn<Part, String> name2Column;
     @FXML public TableColumn<Part, Integer> inventory2Column;
     @FXML public TableColumn price2Column;
+    
+    static Product[] deletedProduct = new Product[1];
     
     static public ObservableList<Part> parts1=FXCollections.observableArrayList();
     static public ObservableList<Part> parts2=FXCollections.observableArrayList();
@@ -168,7 +171,12 @@ public class ModifyProductController implements Initializable {
     }
 
     public void cancelButtonPushed(ActionEvent event) throws IOException {
-        Parent tableViewParent = FXMLLoader.load(getClass().getResource("fxmlGUI.fxml"));        
+        //Parent tableViewParent = FXMLLoader.load(getClass().getResource("fxmlGUI.fxml"));
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("fxmlGUI.fxml"));
+        Parent tableViewParent = loader.load();
+        Scene tableViewScene = new Scene(tableViewParent);
+        FxmlGUIController controller = loader.getController();        
         //alert window    
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.initModality(Modality.NONE);
@@ -179,12 +187,17 @@ public class ModifyProductController implements Initializable {
             
             alert.showAndWait().ifPresent(response -> {
                 if (response == ButtonType.OK) {
-                    Scene tableViewScene = new Scene(tableViewParent);
+                    //Scene tableViewScene = new Scene(tableViewParent);
                     Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();
                     window.setScene(tableViewScene);
                     window.show();
                 }
             });
+            controller.addProducts(deletedProduct[0]);
+    }
+    
+    public void deletedAndModified(Product product) {
+        deletedProduct[0] = product;
     }
     
     @Override
